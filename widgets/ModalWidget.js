@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Dimensions,
   View,
   Text,
   TouchableHighlight,
@@ -15,6 +16,7 @@ var GiftedFormManager = require('../GiftedFormManager');
 var TimerMixin = require('react-timer-mixin');
 
 var moment = require('moment');
+var {height, width} = Dimensions.get('window');
 
 module.exports = React.createClass({
   mixins: [TimerMixin, WidgetMixin],
@@ -61,7 +63,6 @@ module.exports = React.createClass({
   onPress() {
 
     // title={this.props.title} // @todo working  ?
-
     var _self = this;
 
     var {
@@ -75,13 +76,32 @@ module.exports = React.createClass({
         var {onFocus, onBlur, ...others} = _self.props;
 
         return (
-          <GiftedFormModal
-            {...others}
-
-            navigator={navigator}
-            isModal={true}
-            children={_self._childrenWithProps}
-          />
+          <View style={{flex:1}}>
+              <View style={{height:40,flexDirection:'row',}}>
+                  <View style={{flex:1,}}/>
+                  <TouchableOpacity
+                      onPress={() => {
+                        _self.requestAnimationFrame(() => {
+                          _self.onClose(null, navigator);
+                        });
+                      }}
+                  >
+                    <Image
+                      style={{ width: 24, marginTop:10, marginRight:20, tintColor: '#09b881', }}
+                      resizeMode={Image.resizeMode.contain}
+                      source={require('../icons/check.png')}
+                    />
+                  </TouchableOpacity>
+              </View>
+              <View style={{padding:10,}}>
+                  <GiftedFormModal
+                      {...others}
+                      navigator={navigator}
+                      isModal={true}
+                      children={_self._childrenWithProps}
+                  />
+              </View>
+          </View>
         );
       },
       getTitle() {

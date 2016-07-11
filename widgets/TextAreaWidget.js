@@ -1,10 +1,11 @@
 var React = require('react');
 var {
+  Dimensions,
   View,
   TextInput,
   PixelRatio
 } = require('react-native')
-
+var {height, width} = Dimensions.get('window');
 var WidgetMixin = require('../mixins/WidgetMixin.js');
 
 
@@ -37,16 +38,17 @@ module.exports = React.createClass({
   defaultStyles: {
     textAreaRow: {
       backgroundColor: '#FFF',
-      height: 120,
+      height: height*2/3,
       borderBottomWidth: 1 / PixelRatio.get(),
       borderColor: '#c8c7cc',
-      alignItems: 'center',
-      paddingLeft: 10,
-      paddingRight: 10,
+      //alignItems: 'center',
+      //paddingLeft: 10,
+      //paddingRight: 10,
     },
     textArea: {
-      fontSize: 15,
       flex: 1,
+      fontSize: 15,
+      padding:15,
     },
   },
   
