@@ -1,5 +1,5 @@
 import React from 'react'
-import {TextInput, View, ListView, Image, Text, Dimensions, TouchableHighlight, TouchableWithoutFeedback, Platform, ActivityIndicatorIOS, ProgressBarAndroid, PixelRatio} from 'react-native'
+import {TextInput, View, ListView, Image, Text, Dimensions, TouchableHighlight, TouchableWithoutFeedback, Platform, ActivityIndicator, PixelRatio} from 'react-native'
 import Qs from 'qs'
 //import Style from "./Style";
 
@@ -8,29 +8,32 @@ const defaultStyles = {
     flex: 1,
   },
   textInputContainer: {
-    backgroundColor: '#C9C9CE',
-    height: 44,
+    //backgroundColor: '#C9C9CE',
+    //height: 44,
     //width: Style.SEARCH_WIDTH,
-    marginTop: 1,
-    marginLeft: 1,
-    marginRight: 1,
+    //marginTop: 1,
+    //marginLeft: 1,
+    //marginRight: 1,
     //borderTopColor: '#7e7e7e',
     //borderBottomColor: '#b5b5b5',
     //borderTopWidth: 1 / PixelRatio.get(),
     //borderBottomWidth: 1 / PixelRatio.get(),
   },
   textInput: {
-    backgroundColor: '#FFFFFF',
-    height: 40,
+    //backgroundColor: '#FFFFFF',
+    //height: 40,
     //borderRadius: 5,
     //paddingTop: 4.5,
-    paddingBottom: 4,
+    //paddingBottom: 4,
     //paddingLeft: 5,
     //paddingRight: 5,
-    marginTop: 2,
-    marginLeft: 2,
-    marginRight: 2,
-    fontSize: 20,
+    //marginTop: 2,
+    //marginLeft: 2,
+    //marginRight: 2,
+    //fontSize: 20,
+    fontSize: 15,
+    flex: 1,
+    height: 40,
   },
   poweredContainer: {
     justifyContent: 'center',
@@ -46,7 +49,7 @@ const defaultStyles = {
     padding: 13,
     height: 44,
     flexDirection: 'row',
-    backgroundColor: 'rgba(150,150,150,0.7)', 
+    backgroundColor: 'rgba(220,220,220,0.7)', 
   },
   separator: {
     height: 1,
@@ -444,7 +447,7 @@ const BaiduPlaceTip = React.createClass({
           // console.warn("google places autocomplete: request could not be completed or has been aborted");
         }
       };
-      var url='http://api.map.baidu.com/place/v2/suggestion?output=json&location=0,0&mcode=' +this.props.query.mcode +'&q=' +encodeURI(text) +'&ak='+this.props.query.ak;
+      var url='http://api.map.baidu.com/place/v2/suggestion?output=json&location=40,116&mcode=' +this.props.query.mcode +'&q=' +encodeURI(text) +'&ak='+this.props.query.ak;
       //console.log('url='+url)
       //alert(url)
       request.open('GET', url);
@@ -465,16 +468,16 @@ const BaiduPlaceTip = React.createClass({
   },
   
   _getRowLoader() {
-    if (Platform.OS === 'android') {
+    /*if (Platform.OS === 'android') {
       return (
         <ProgressBarAndroid
           style={[defaultStyles.androidLoader, this.props.styles.androidLoader]}
           styleAttr="Inverse"
         />
       );
-    }
+    }*/
     return (
-      <ActivityIndicatorIOS
+      <ActivityIndicator
         animating={true}
         size="small"
       />

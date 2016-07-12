@@ -87,8 +87,10 @@ module.exports = React.createClass({
     return (
       <View style={this.getStyle(['rowContainer'])}>
         <View style={{flexDirection: 'row',alignItems: 'center',}}>
+          {this._renderImage()}
           {this._renderTitle()}
           {this.renderMaps()}
+          {this._renderUnderline()}
         </View>
       </View>
     );

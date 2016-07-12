@@ -1,5 +1,5 @@
 import React from 'react'
-import {TextInput, View, ListView, Image, Text, Dimensions, TouchableHighlight, TouchableWithoutFeedback, Platform, ActivityIndicatorIOS, ProgressBarAndroid, PixelRatio} from 'react-native'
+import {TextInput, View, ListView, Image, Text, Dimensions, TouchableHighlight, TouchableWithoutFeedback, Platform, ActivityIndicator, PixelRatio} from 'react-native'
 import Qs from 'qs'
 //import Style from "./Style";
 
@@ -8,36 +8,40 @@ const defaultStyles = {
     flex: 1,
   },
   textInputContainer: {
-    backgroundColor: '#C9C9CE',
-    height: 44,
+    //backgroundColor: '#C9C9CE',
+    //height: 44,
     //width: Style.SEARCH_WIDTH,
-    marginTop: 1,
-    marginLeft: 1,
-    marginRight: 1,
+    //marginTop: 1,
+    //marginLeft: 1,
+    //marginRight: 1,
     //borderTopColor: '#7e7e7e',
     //borderBottomColor: '#b5b5b5',
     //borderTopWidth: 1 / PixelRatio.get(),
     //borderBottomWidth: 1 / PixelRatio.get(),
   },
   textInput: {
-    backgroundColor: '#FFFFFF',
-    height: 40,
+    //backgroundColor: '#FFFFFF',
+    //height: 40,
     //borderRadius: 5,
     //paddingTop: 4.5,
-    paddingBottom: 4,
+    //paddingBottom: 1,
     //paddingLeft: 5,
     //paddingRight: 5,
+    //marginTop: 2,
+    //marginLeft: 2,
+    //marginRight: 2,
+    //fontSize: 15,
+    fontSize: 15,
+    flex: 1,
+    height: 40,// @todo should be changed if underlined
     marginTop: 2,
-    marginLeft: 2,
-    marginRight: 2,
-    fontSize: 20,
   },
   poweredContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   powered: {
-    marginTop: 15,
+    //marginTop: 15,
   },
   listView: {
     // flex: 1,
@@ -46,7 +50,7 @@ const defaultStyles = {
     padding: 13,
     height: 44,
     flexDirection: 'row',
-    backgroundColor: 'rgba(150,150,150,0.7)', 
+    backgroundColor: 'rgba(220,220,220,0.7)', 
   },
   separator: {
     height: 1,
@@ -458,16 +462,16 @@ const GooglePlacesAutocomplete = React.createClass({
   },
   
   _getRowLoader() {
-    if (Platform.OS === 'android') {
+    /*if (Platform.OS === 'android') {
       return (
         <ProgressBarAndroid
           style={[defaultStyles.androidLoader, this.props.styles.androidLoader]}
           styleAttr="Inverse"
         />
       );
-    }
+    }*/
     return (
-      <ActivityIndicatorIOS
+      <ActivityIndicator
         animating={true}
         size="small"
       />
