@@ -26,7 +26,7 @@ module.exports = React.createClass({
           multiline={true}
 
           {...this.props}
-          
+          editable = {true}
           onFocus={() => this.props.onFocus(true)}
           onChangeText={this._onChange}
           value={this.state.value}
@@ -38,7 +38,7 @@ module.exports = React.createClass({
   defaultStyles: {
     textAreaRow: {
       backgroundColor: '#FFF',
-      height: height*2/3,
+      height: height/2,
       borderBottomWidth: 1 / PixelRatio.get(),
       borderColor: '#c8c7cc',
       //alignItems: 'center',
@@ -47,8 +47,10 @@ module.exports = React.createClass({
     },
     textArea: {
       flex: 1,
-      fontSize: 15,
+      fontSize: 16,
       padding:15,
+      textAlign: "left", 
+      textAlignVertical: "top",
     },
   },
   
