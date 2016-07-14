@@ -38,6 +38,7 @@ module.exports = React.createClass({
     if (this.props.multiple === false) {
       this.props.unSelectAll();
       this._onChange(true);
+      //alert('value='+this.props.value)
       if (typeof this.props.onSelect === 'function') {
         // console.log('onSelect');
         this.props.onSelect(this.props.value);

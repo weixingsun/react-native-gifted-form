@@ -8,9 +8,14 @@ var BaiduPlaceTip  = require('./BaiduPlaceTip');
 
 module.exports = React.createClass({
   mixins: [WidgetMixin],
-  
+  propTypes: {
+    placeholder:  React.PropTypes.string,
+    fetchDetails: React.PropTypes.bool,
+    value:        React.PropTypes.string,
+  },
   getDefaultProps() {
     return {
+      value: '',
       type: 'PlaceSearchWidget',
     };
   },
@@ -108,9 +113,7 @@ module.exports = React.createClass({
           this._onChange( details.formatted_address );
           this.props.onClose({lat:details.geometry.location.lat,lng:details.geometry.location.lng,type:details.types}, this.props.navigator);
         }}
-        getDefaultValue={() => {
-          return ''; // text input default value
-        }}
+        value={ this.props.value }
         query={this.props.query}
         styles={{
           description: {
@@ -140,6 +143,7 @@ module.exports = React.createClass({
 
   renderBaidu(){
     //const everywhere = {description: 'Everywhere', geometry: { location: { lat: 0, lng: 0 } }};
+    //alert('default='+this.props.value)
     return (
       <BaiduPlaceTip
         placeholder='powered by Baidu'
@@ -150,9 +154,7 @@ module.exports = React.createClass({
           this._onChange( data.description )
           this.props.onClose({lat:data.location.lat,lng:data.location.lng}, this.props.navigator);
         }}
-        getDefaultValue={() => {
-          return ''; // text input default value
-        }}
+        value={ this.props.value }
         query={this.props.query}
         styles={{
           description: {

@@ -197,6 +197,7 @@ module.exports = React.createClass({
   },
 
   onClose(value, navigator = null) {
+    //alert('ModalWidget.onClose.value='+value)
     if (typeof value === 'string') {
       this.setState({
         value: value,
