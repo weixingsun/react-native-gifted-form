@@ -7,7 +7,7 @@ var {
 } = require('react-native')
 
 var WidgetMixin = require('../mixins/WidgetMixin.js');
-
+var ValidationErrorWidget = require('./ValidationErrorWidget');
 
 module.exports = React.createClass({
   mixins: [WidgetMixin],
@@ -45,6 +45,23 @@ module.exports = React.createClass({
     );
   },
 
+  renderLiveValidationError(){
+    if(this.props.validationResults == null) return null
+    else{
+      let result = this.props.validationResults[this.props.name][0]
+      //alert(JSON.stringify(result))
+      if(result.isValid) return null
+      else{
+        //console.log('validationResults='+JSON.stringify(this.props.validationResults[this.props.name])+'\nname='+this.props.name)
+        return (
+        <ValidationErrorWidget
+          {...this.props}
+          message={result.message}
+        />
+        )
+      }
+    }
+  },
   _renderRow() {
     
     if (this.props.inline === false) {
@@ -68,12 +85,13 @@ module.exports = React.createClass({
             onChangeText={this._onChange}
             value={this.state.value}
           />
-          {this._renderValidationError()}
+          {this.renderLiveValidationError()}
           {this._renderUnderline()}
         </View>
       );
-    } 
-    return (
+      //{this._renderValidationError()}
+    } else {
+      return (
       <View style={this.getStyle(['rowContainer'])}>
         <View style={this.getStyle(['row'])}>
           {this._renderImage()}
@@ -91,11 +109,12 @@ module.exports = React.createClass({
             value={this.state.value}
           />
         </View>
-        {this._renderValidationError()}
+        {this.renderLiveValidationError()}
         {this._renderUnderline()}
       </View>
-    );
-
+      );
+      //{this._renderValidationError()}
+    }
   },
   
   onFocus() {
@@ -203,7 +222,7 @@ module.exports = React.createClass({
       fontSize: 15,
       flex: 1,
       height: 40,
-      marginLeft: 40,
+      marginLeft: 20,
     },
   },
 });

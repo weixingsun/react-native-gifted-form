@@ -18,6 +18,9 @@ module.exports = React.createClass({
   },
   
   render() {
+    //console.log('row_style:'+JSON.stringify(this.getStyle('validationErrorRow')))
+    //console.log('text_style:'+JSON.stringify(this.getStyle('validationError')))
+    //alert('validationErr:'+this.props.message)
     return (
       <View>
         <View style={this.getStyle('validationErrorRow')}>

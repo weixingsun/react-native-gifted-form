@@ -2,6 +2,7 @@ var React = require('react');
 var {Text,View,PixelRatio} = require('react-native');
 
 var WidgetMixin = require('../mixins/WidgetMixin.js');
+var ValidationErrorWidget = require('./ValidationErrorWidget');
 
 var GooglePlaceTip = require('./GooglePlaceTip');
 var BaiduPlaceTip  = require('./BaiduPlaceTip');
@@ -97,9 +98,23 @@ module.exports = React.createClass({
           {this.renderMaps()}
           {this._renderUnderline()}
         </View>
+          {this.renderValidationError()}
       </View>
     );
 
+  },
+  renderValidationError(){
+    if(this.props.validationResults == null) return null
+    else if(this.props.validationResults[this.props.name][0].isValid) return null
+    else{
+      //console.log('validationResults='+JSON.stringify(this.props.validationResults[this.props.name])+'\nname='+this.props.name)
+      return (
+        <ValidationErrorWidget
+          {...this.props}
+          message={this.props.validationResults[this.props.name][0].message}
+        />
+      )
+    }
   },
   renderGoogle() {
     //const everywhere = {description: 'Everywhere', geometry: { location: { lat: 0, lng: 0 } }};
@@ -248,7 +263,7 @@ module.exports = React.createClass({
       fontSize: 15,
       flex: 1,
       height: 40,
-      marginLeft: 40,
+      marginLeft: 20,
     },
   },
 });

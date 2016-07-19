@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 var WidgetMixin = require('../mixins/WidgetMixin');
+var ValidationErrorWidget = require('./ValidationErrorWidget');
 
 var GiftedFormManager = require('../GiftedFormManager');
 var TimerMixin = require('react-timer-mixin');
@@ -274,7 +275,19 @@ module.exports = React.createClass({
     }
     return '';
   },
-
+  renderValidationError(){
+    if(this.props.validationResults == null) return null
+    else if(this.props.validationResults[this.props.name][0].isValid) return null
+    else{
+      //console.log('validationResults='+JSON.stringify(this.props.validationResults[this.props.name])+'\nname='+this.props.name)
+      return (
+        <ValidationErrorWidget
+          {...this.props}
+          message={this.props.validationResults[this.props.name][0].message}
+        />
+      )
+    }
+  },
   render() {
     return (
       <TouchableHighlight
@@ -289,6 +302,7 @@ module.exports = React.createClass({
 
         style={this.getStyle('rowContainer')}
       >
+      <View style={this.getStyle(['rowContainer'])}>
         <View style={this.getStyle('row')}>
           {this._renderImage()}
           <Text numberOfLines={1} style={this.getStyle('modalTitle')}>{this.props.title}</Text>
@@ -297,6 +311,8 @@ module.exports = React.createClass({
           </View>
           {this.renderDisclosure()}
         </View>
+        {this.renderValidationError()}
+      </View>
       </TouchableHighlight>
     );
   },
