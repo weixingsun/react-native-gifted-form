@@ -192,17 +192,23 @@ module.exports = React.createClass({
 
   componentDidMount() {
     // @todo test if its working
+    //alert('allValues:'+JSON.stringify(GiftedFormManager.getValues(this.props.formName)))
     this.setState({
-      value: this._getDisplayableValue(),
+      display: this._getDisplay(),
+      value: this._getValue(),
     });
   },
 
   onClose(value, navigator = null) {
-    //alert('ModalWidget.onClose.value='+value)
+    //alert('ModalWidget.onClose.value='+value+'  type:'+typeof value)
     if (typeof value === 'string') {
       this.setState({
-        value: value,
+        display: value,
       });
+    //} else if (this.props.defaultValue !== '') {
+    //  this.setState({
+    //    value: this.props.defaultValue,
+    //  });
     } else if (this.props.displayValue !== '') {
       this.setState({
         value: this._getDisplayableValue(),
@@ -219,12 +225,19 @@ module.exports = React.createClass({
       value: this._getDisplayableValue(),
     });
   },
-
+  _getDisplay(){
+      return this.props.display;
+  },
+  _getValue(){
+      return this.props.Value;
+  },
   _getDisplayableValue() {
+    //alert(this.props.displayValue+':'+JSON.stringify(GiftedFormManager.getValues(this.props.formName)))
     if (this.props.displayValue !== '') {
       if (typeof GiftedFormManager.stores[this.props.formName] !== 'undefined') {
         if (typeof GiftedFormManager.stores[this.props.formName].values !== 'undefined') {
           if (typeof GiftedFormManager.stores[this.props.formName].values[this.props.displayValue] !== 'undefined') {
+            //console.log('if.form.'+this.props.displayValue+'='+GiftedFormManager.stores[this.props.formName].values[this.props.displayValue])
             if (typeof this.props.transformValue === 'function') {
               return this.props.transformValue(GiftedFormManager.stores[this.props.formName].values[this.props.displayValue]);
             } else if (GiftedFormManager.stores[this.props.formName].values[this.props.displayValue] instanceof Date) {
@@ -237,7 +250,9 @@ module.exports = React.createClass({
               });
             }
             if (typeof GiftedFormManager.stores[this.props.formName].values[this.props.displayValue] === 'string') {
-              return GiftedFormManager.stores[this.props.formName].values[this.props.displayValue].trim();
+              let display = GiftedFormManager.stores[this.props.formName].values[this.props.displayValue].trim()
+              //console.log('form.textarea:'+this.props.displayValue+'='+display)  //text area
+              return display;
             }
           } else {
             // @todo merge with when not select menu
@@ -246,6 +261,8 @@ module.exports = React.createClass({
             // probably because it's a select menu
             // options of select menus are stored using the syntax name{value}, name{value}
             var values = GiftedFormManager.getValues(this.props.formName);
+            //console.log('else------form.'+this.props.displayValue+'='+JSON.stringify(values))
+            //alert(JSON.stringify(GiftedFormManager.getValues(this.props.formName)))
             if (typeof values === 'object') {
               if (typeof values[this.props.displayValue] !== 'undefined') {
                 if (typeof this.props.transformValue === 'function') {
@@ -289,6 +306,7 @@ module.exports = React.createClass({
     }
   },
   render() {
+    //console.log('modal.'+this.props.title+'.value:'+this.state.value)
     return (
       <TouchableHighlight
         onPress={() => {
@@ -307,7 +325,7 @@ module.exports = React.createClass({
           {this._renderImage()}
           <Text numberOfLines={1} style={this.getStyle('modalTitle')}>{this.props.title}</Text>
           <View style={this.getStyle('alignRight')}>
-            <Text numberOfLines={1} style={this.getStyle('modalValue')}>{this.state.value}</Text>
+            <Text numberOfLines={1} style={this.getStyle('modalValue')}>{this.state.display}</Text>
           </View>
           {this.renderDisclosure()}
         </View>
