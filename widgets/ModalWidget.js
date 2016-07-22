@@ -210,8 +210,10 @@ module.exports = React.createClass({
     //    value: this.props.defaultValue,
     //  });
     } else if (this.props.displayValue !== '') {
+      let value = this._getDisplayableValue()
       this.setState({
-        value: this._getDisplayableValue(),
+        display: value,
+        value: value,
       });
     }
 
@@ -252,6 +254,7 @@ module.exports = React.createClass({
             if (typeof GiftedFormManager.stores[this.props.formName].values[this.props.displayValue] === 'string') {
               let display = GiftedFormManager.stores[this.props.formName].values[this.props.displayValue].trim()
               //console.log('form.textarea:'+this.props.displayValue+'='+display)  //text area
+              //alert('form.textarea:'+display)
               return display;
             }
           } else {
