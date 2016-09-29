@@ -48,6 +48,7 @@ module.exports = React.createClass({
   renderLiveValidationError(){
     if(this.props.validationResults == null) return null
     else{
+      if(this.props.validationResults[this.props.name]==null) return null
       let result = this.props.validationResults[this.props.name][0]
       //alert(JSON.stringify(result))
       if(result.isValid) return null

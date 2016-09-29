@@ -105,6 +105,7 @@ module.exports = React.createClass({
   },
   renderValidationError(){
     if(this.props.validationResults == null) return null
+    else if(this.props.validationResults[this.props.name]==null) return null
     else if(this.props.validationResults[this.props.name][0].isValid) return null
     else{
       //console.log('validationResults='+JSON.stringify(this.props.validationResults[this.props.name])+'\nname='+this.props.name)
