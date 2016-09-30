@@ -48,11 +48,12 @@ module.exports = React.createClass({
   renderLiveValidationError(){
     if(this.props.validationResults == null) return null
     else{
+      //console.log('name='+this.props.name+'  result='+JSON.stringify(this.props.validationResults))
       if(this.props.validationResults[this.props.name]==null) return null
       let result = this.props.validationResults[this.props.name][0]
-      //alert(JSON.stringify(result))
       if(result.isValid) return null
       else{
+        //alert(JSON.stringify(result))
         //console.log('validationResults='+JSON.stringify(this.props.validationResults[this.props.name])+'\nname='+this.props.name)
         return (
         <ValidationErrorWidget
@@ -82,15 +83,14 @@ module.exports = React.createClass({
             onFocus={this.onFocus}
             onBlur={this.onBlur}
             
-            
             onChangeText={this._onChange}
             value={this.state.value}
           />
-          {this.renderLiveValidationError()}
+          {this._renderValidationError()}
           {this._renderUnderline()}
         </View>
       );
-      //{this._renderValidationError()}
+      //{this.renderLiveValidationError()}
     } else {
       return (
       <View style={this.getStyle(['rowContainer'])}>
@@ -110,11 +110,11 @@ module.exports = React.createClass({
             value={this.state.value}
           />
         </View>
-        {this.renderLiveValidationError()}
+        {this._renderValidationError()}
         {this._renderUnderline()}
       </View>
       );
-      //{this._renderValidationError()}
+      //{this.renderLiveValidationError()}
     }
   },
   

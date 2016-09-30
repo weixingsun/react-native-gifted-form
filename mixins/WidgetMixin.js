@@ -57,11 +57,18 @@ module.exports = {
     // get value from store
     var formState = GiftedFormManager.stores[this.props.formName];
     if (typeof formState !== 'undefined') {
+      console.log('WidgetMixin.componentDidMount()'+this.props.name+'='+formState.values[this.props.name])
       if (typeof formState.values[this.props.name] !== 'undefined') {
         this.setState({
           value: formState.values[this.props.name],
         });
         this._validate(formState.values[this.props.name]);
+      }else{
+        let value = GiftedFormManager.getValue(this.props.formName, this.props.name)
+        if(value!=null){
+          this.setState({ value: value, });
+          this._validate(value);
+        }
       }
     }
   },
@@ -70,6 +77,7 @@ module.exports = {
     if (typeof nextProps.value !== 'undefined' && nextProps.value !== this.props.value) {
       this._onChange(nextProps.value);
     }
+    //alert('componentWillReceiveProps() value='+this.props.value)
   },
 
   // get the styles by priority
@@ -141,10 +149,12 @@ module.exports = {
     this.setState({
       value: value
     });
+    //console.log('GiftedFormManager.updateValue: '+this.props.name+"="+value)
     GiftedFormManager.updateValue(this.props.formName, this.props.name, value);
   },
 
   _onChange(value, onChangeText = true) {
+    //console.log('_onChange:'+value)
     if (onChangeText === true) {
       //should maintain similar API to core TextInput component
       this.props.onChangeText && this.props.onChangeText(value);
@@ -159,27 +169,36 @@ module.exports = {
 
   // @todo options enable live checking
   _renderValidationError() {
-    let hasValue = typeof this.state.value !== 'undefined' && this.state.value !== '';
-
-    if (this.props.validateOnEmpty) {
-      hasValue = true;
-    }
-
-    if (!hasValue) {
-      return null;
-    }
-
-    const hasValidationErrors = this.state.validationErrorMessage !== null && this.state.validationErrorMessage !== '';
-
-    if (!hasValidationErrors) {
-      return null;
+    //let hasValue = typeof this.state.value !== 'undefined' && this.state.value !== '';
+    //if (this.props.validateOnEmpty) hasValue = true;
+    //if (!hasValue) return null
+    if(this.props.validationResults == null) return null
+    //let value = GiftedFormManager.getValue(this.props.formName, this.props.name)
+    //if(value!=this.state.value) alert(this.props.name+'.store.value:'+value+'  state.value:'+this.state.value)
+    //const hasValidationErrors = this.state.validationErrorMessage !== null && this.state.validationErrorMessage !== '';
+    let errMsg = this.state.validationErrorMessage
+    if(this.state.value == null&& !this.props.validationResults[this.props.name].isValid){
+        errMsg=this.props.validationResults[this.props.name][0].message
+        //console.log('_renderValidationError() validationResults='+JSON.stringify(this.props.validationResults[this.props.name][0]) +'  value is null='+this.state.value)
+    }else if (errMsg==null || errMsg==='') {
+      var validators = GiftedFormManager.getValidators(this.props.formName, this.props.name);
+      if (Array.isArray(validators.validate)) {
+        if (validators.validate.length > 0) {
+          var validation = GiftedFormManager.validateAndParseOne(this.props.name, this.state.value, {validate: validators.validate, title: validators.title});
+          if (validation.isValid === false) {
+             errMsg = validation.message
+             //console.log('_renderValidationError() validationResults='+JSON.stringify(this.props.validationResults[this.props.name][0])+' \nname='+this.props.name+'  value='+this.state.value+'  \nresult='+JSON.stringify(validation))
+          }
+        }
+      }
+      if(errMsg==null || errMsg==='') return null
     }
 
     var ValidationErrorWidget = require('../widgets/ValidationErrorWidget');
     return (
       <ValidationErrorWidget
         {...this.props}
-        message={this.state.validationErrorMessage}
+        message={errMsg}
       />
     );
   },
@@ -202,7 +221,7 @@ module.exports = {
 
     // @todo image delete_sign / checkmark should be editable via option
     // @todo options enable live validation
-
+    //console.log('WidgetMixin._renderImage() name:'+this.props.name+' errMsg:'+this.state.validationErrorMessage)
     let hasValue = typeof this.state.value !== 'undefined' && this.state.value !== '';
 
     if (this.props.validateOnEmpty) {

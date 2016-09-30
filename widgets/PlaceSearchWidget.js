@@ -98,7 +98,7 @@ module.exports = React.createClass({
           {this.renderMaps()}
           {this._renderUnderline()}
         </View>
-          {this.renderValidationError()}
+          {this._renderValidationError()}
       </View>
     );
 

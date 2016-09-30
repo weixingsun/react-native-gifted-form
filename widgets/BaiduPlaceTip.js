@@ -498,7 +498,7 @@ const BaiduPlaceTip = React.createClass({
   },
 
   _renderRow(rowData = {}) {
-    rowData.description = rowData.name +' '+ rowData.city + rowData.district ;
+    rowData.description = rowData.name +', '+rowData.district+', '+ rowData.city +', 中国' ;
     
     return (
       <TouchableHighlight
@@ -513,7 +513,7 @@ const BaiduPlaceTip = React.createClass({
               style={[{flex: 1}, defaultStyles.description, this.props.styles.description, rowData.isPredefinedPlace ? this.props.styles.predefinedPlacesDescription : {}]}
               numberOfLines={1}
             >
-              {rowData.name + ' ' + rowData.city+rowData.district}
+              {rowData.description}
             </Text>
             {this._renderLoader(rowData)}
           </View>

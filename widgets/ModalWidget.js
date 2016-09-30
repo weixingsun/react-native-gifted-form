@@ -191,29 +191,27 @@ module.exports = React.createClass({
   },
 
   componentDidMount() {
-    // @todo test if its working
     //alert('allValues:'+JSON.stringify(GiftedFormManager.getValues(this.props.formName)))
     this.setState({
-      display: this._getDisplay(),
-      value: this._getValue(),
+      display: this.props.display,
+      value: this.props.value,
     });
   },
 
   onClose(value, navigator = null) {
-    //alert('ModalWidget.onClose.value='+value+'  type:'+typeof value)
-    if (typeof value === 'string') {
+    //alert('ModalWidget.onClose.value='+value+'  type:'+typeof value+'  displayValue='+this._getDisplayableValue())
+    if (typeof value === 'string') { //for select
+      //alert('ModalWidget.onClose.value='+value+'  type:'+typeof value)
       this.setState({
+        value: value,
         display: value,
       });
-    //} else if (this.props.defaultValue !== '') {
-    //  this.setState({
-    //    value: this.props.defaultValue,
-    //  });
-    } else if (this.props.displayValue !== '') {
-      let value = this._getDisplayableValue()
+    } else { //for textarea
+      let value1 = GiftedFormManager.getValue(this.props.formName, this.props.name)
+      //alert('ModalWidget.onClose()store.value='+value1+'  type:'+typeof value1)
       this.setState({
-        display: value,
-        value: value,
+        display: value1,
+        value: value1,
       });
     }
 
@@ -226,12 +224,6 @@ module.exports = React.createClass({
     this.setState({
       value: this._getDisplayableValue(),
     });
-  },
-  _getDisplay(){
-      return this.props.display;
-  },
-  _getValue(){
-      return this.props.Value;
   },
   _getDisplayableValue() {
     //alert(this.props.displayValue+':'+JSON.stringify(GiftedFormManager.getValues(this.props.formName)))
@@ -295,19 +287,6 @@ module.exports = React.createClass({
     }
     return '';
   },
-  renderValidationError(){
-    if(this.props.validationResults == null) return null
-    else if(this.props.validationResults[this.props.name][0].isValid) return null
-    else{
-      //console.log('validationResults='+JSON.stringify(this.props.validationResults[this.props.name])+'\nname='+this.props.name)
-      return (
-        <ValidationErrorWidget
-          {...this.props}
-          message={this.props.validationResults[this.props.name][0].message}
-        />
-      )
-    }
-  },
   render() {
     //console.log('modal.'+this.props.title+'.value:'+this.state.value)
     return (
@@ -332,7 +311,7 @@ module.exports = React.createClass({
           </View>
           {this.renderDisclosure()}
         </View>
-        {this.renderValidationError()}
+        {this._renderValidationError()}
       </View>
       </TouchableHighlight>
     );

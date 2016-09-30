@@ -10,9 +10,30 @@
         "type": "tag"
       },
       "/Users/weixingsun/share"
+    ],
+    [
+      {
+        "raw": "react-native-gifted-form@git+https://github.com/weixingsun/react-native-gifted-form.git",
+        "scope": null,
+        "escapedName": "react-native-gifted-form",
+        "name": "react-native-gifted-form",
+        "rawSpec": "git+https://github.com/weixingsun/react-native-gifted-form.git",
+        "spec": "git+https://github.com/weixingsun/react-native-gifted-form.git",
+        "type": "hosted",
+        "hosted": {
+          "type": "github",
+          "ssh": "git@github.com:weixingsun/react-native-gifted-form.git",
+          "sshUrl": "git+ssh://git@github.com/weixingsun/react-native-gifted-form.git",
+          "httpsUrl": "git+https://github.com/weixingsun/react-native-gifted-form.git",
+          "gitUrl": "git://github.com/weixingsun/react-native-gifted-form.git",
+          "shortcut": "github:weixingsun/react-native-gifted-form",
+          "directUrl": "https://raw.githubusercontent.com/weixingsun/react-native-gifted-form/master/package.json"
+        }
+      },
+      "/Users/weixingsun/share"
     ]
   ],
-  "_from": "react-native-gifted-form@latest",
+  "_from": "git+https://github.com/weixingsun/react-native-gifted-form.git",
   "_id": "react-native-gifted-form@0.0.9",
   "_inCache": true,
   "_installable": true,
@@ -27,22 +48,34 @@
     "name": "faridsafi"
   },
   "_npmVersion": "3.9.3",
-  "_phantomChildren": {},
+  "_phantomChildren": {
+    "lodash.isequal": "4.4.0"
+  },
   "_requested": {
-    "name": "react-native-gifted-form",
-    "raw": "react-native-gifted-form",
-    "rawSpec": "",
+    "raw": "react-native-gifted-form@git+https://github.com/weixingsun/react-native-gifted-form.git",
     "scope": null,
-    "spec": "latest",
-    "type": "tag"
+    "escapedName": "react-native-gifted-form",
+    "name": "react-native-gifted-form",
+    "rawSpec": "git+https://github.com/weixingsun/react-native-gifted-form.git",
+    "spec": "git+https://github.com/weixingsun/react-native-gifted-form.git",
+    "type": "hosted",
+    "hosted": {
+      "type": "github",
+      "ssh": "git@github.com:weixingsun/react-native-gifted-form.git",
+      "sshUrl": "git+ssh://git@github.com/weixingsun/react-native-gifted-form.git",
+      "httpsUrl": "git+https://github.com/weixingsun/react-native-gifted-form.git",
+      "gitUrl": "git://github.com/weixingsun/react-native-gifted-form.git",
+      "shortcut": "github:weixingsun/react-native-gifted-form",
+      "directUrl": "https://raw.githubusercontent.com/weixingsun/react-native-gifted-form/master/package.json"
+    }
   },
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/react-native-gifted-form/-/react-native-gifted-form-0.0.9.tgz",
-  "_shasum": "eba529e14f11a97c1189f5d5cb751b4128124fb0",
+  "_resolved": "git+https://github.com/weixingsun/react-native-gifted-form.git#3ab7a7c4338ee1fd7510ff685e44ea9d62119428",
+  "_shasum": "63181af95bba24fd113c0cd11361a3fb060508ba",
   "_shrinkwrap": null,
-  "_spec": "react-native-gifted-form",
+  "_spec": "react-native-gifted-form@git+https://github.com/weixingsun/react-native-gifted-form.git",
   "_where": "/Users/weixingsun/share",
   "author": {
     "name": "Farid from Safi"
@@ -79,12 +112,12 @@
   "main": "GiftedForm.js",
   "maintainers": [
     {
-      "email": "danielweinmann@gmail.com",
-      "name": "danielweinmann"
+      "name": "danielweinmann",
+      "email": "danielweinmann@gmail.com"
     },
     {
-      "email": "farid+npm@senseful.fr",
-      "name": "faridsafi"
+      "name": "faridsafi",
+      "email": "farid+npm@senseful.fr"
     }
   ],
   "name": "react-native-gifted-form",

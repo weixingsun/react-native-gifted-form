@@ -59,7 +59,8 @@ function doValidateOne(k = '', value = undefined, validators = {}) {
         message,
         value: clonedArgs[0],
         title: title || k,
-      });  }
+      });
+    }
   }
   return result;
 }

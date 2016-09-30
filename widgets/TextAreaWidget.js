@@ -19,6 +19,7 @@ module.exports = React.createClass({
   },
   
   render() {
+    //console.log('TextAreaWidget.render() state.value='+this.state.value +'  props.value'+this.props.value)
     return (
       <View style={this.getStyle('textAreaRow')}>
         <TextInput
