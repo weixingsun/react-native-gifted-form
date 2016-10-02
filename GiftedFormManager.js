@@ -1,4 +1,5 @@
 var validatorjs = require('validator');
+var moment = require('moment');
 
 function doValidateOne(k = '', value = undefined, validators = {}) {
   var isValid = null;
@@ -28,9 +29,26 @@ function doValidateOne(k = '', value = undefined, validators = {}) {
       return val !== undefined ? val : '';
     });
 
-    if (typeof validate[i].validator === 'function') {
+    if (validate[i].validator === 'indays') {  //date,30,format
+      let format = clonedArgs[2]
+      let time = moment(clonedArgs[0],format)
+      let days = clonedArgs[1]
+      let now0 = moment().subtract(1, 'minute').format(format)
+      let next = moment().add(days, 'day').format(format)
+      let after = time.isAfter(now0)
+      let before = time.isBefore(next)
+      //alert('indays('+JSON.stringify(clonedArgs)+') before='+before+' after='+after) //+first.isBefore(second))
+      isValid = after && before
+      result.push({
+        validator: validate[i].validator,
+        isValid,
+        message,
+        value: clonedArgs[0],
+        title: title || k,
+      });
+    } else if (typeof validate[i].validator === 'function') {
       isValid = validate[i].validator.apply(null, clonedArgs);
-
+      if(!isValid) alert('func:'+JSON.stringify(validate[i].validator))
       // handle custom validators
       result.push({
         validator: 'Custom',
@@ -52,7 +70,8 @@ function doValidateOne(k = '', value = undefined, validators = {}) {
       }
 
       isValid = validatorjs[validate[i].validator].apply(null, clonedArgs);
-
+       
+      //if(!isValid) alert('func:'+validate[i].validator+'\nargs:'+JSON.stringify(clonedArgs)+'\nobj:'+JSON.stringify(validatorjs))
       result.push({
         validator: validate[i].validator,
         isValid,
