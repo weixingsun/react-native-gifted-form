@@ -48,7 +48,7 @@ function doValidateOne(k = '', value = undefined, validators = {}) {
       });
     } else if (typeof validate[i].validator === 'function') {
       isValid = validate[i].validator.apply(null, clonedArgs);
-      if(!isValid) alert('func:'+JSON.stringify(validate[i].validator))
+      //if(!isValid) alert('func:'+JSON.stringify(validate[i].validator))
       // handle custom validators
       result.push({
         validator: 'Custom',
