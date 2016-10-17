@@ -174,7 +174,13 @@ module.exports = React.createClass({
   },
 
   componentWillMount() {
-    this._childrenWithProps = React.Children.map(this.props.children, (child) => {
+    this.updateChildren(this.props.children)
+  },
+  componentWillReceiveProps(nextProps){
+    this.updateChildren(nextProps.children)
+  },
+  updateChildren(children){
+    this._childrenWithProps = React.Children.map(children, (child) => {
       return React.cloneElement(child, {
         formStyles: this.props.formStyles,
         openModal: this.props.openModal,
@@ -189,7 +195,6 @@ module.exports = React.createClass({
       });
     });
   },
-
   componentDidMount() {
     //alert('allValues:'+JSON.stringify(GiftedFormManager.getValues(this.props.formName)))
     this.setState({
