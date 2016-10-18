@@ -25,6 +25,7 @@ module.exports = React.createClass({
   },
 
   render() {
+    //alert('selectWidget.render() children.keys'+JSON.stringify(Object.keys(this.props.children)))
     this._childrenWithProps = React.Children.map(this.props.children, (child, idx) => {
       var val = child.props.value || child.props.title;
 

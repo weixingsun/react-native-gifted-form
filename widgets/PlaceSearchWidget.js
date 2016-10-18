@@ -127,7 +127,7 @@ module.exports = React.createClass({
         fetchDetails={true}
         onPress={(data, details = {}) => { // details is provided when fetchDetails = true
           this._onChange( details.formatted_address );
-          this.props.onClose({lat:details.geometry.location.lat,lng:details.geometry.location.lng,type:details.types}, this.props.navigator);
+          this.props.onClose({lat:details.geometry.location.lat,lng:details.geometry.location.lng,type:details.types});
         }}
         value={ this.props.value }
         query={this.props.query}
@@ -139,7 +139,8 @@ module.exports = React.createClass({
             color: '#1faadb',
           },
         }}
-        currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
+        onClose={this.props.onClose}
+        currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
         //currentLocationLabel="Current location"
         //currentLocationAPI='GoogleReverseGeocoding' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
         //GoogleReverseGeocodingQuery={{
@@ -180,7 +181,7 @@ module.exports = React.createClass({
             color: '#1faadb',
           },
         }}
-        currentLocation={false} 
+        currentLocation={true}
         {...this.props} // @todo test sans (need for 'name')
       />
     );
