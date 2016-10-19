@@ -133,13 +133,14 @@ module.exports = React.createClass({
         query={this.props.query}
         styles={{
           description: {
-            fontWeight: 'bold',
+            //fontWeight: 'bold',
+            fontSize:12,
           },
           predefinedPlacesDescription: {
             color: '#1faadb',
           },
         }}
-        onClose={this.props.onClose}
+        //onClose={this.props.onClose}
         currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
         //currentLocationLabel="Current location"
         //currentLocationAPI='GoogleReverseGeocoding' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
@@ -175,7 +176,8 @@ module.exports = React.createClass({
         query={this.props.query}
         styles={{
           description: {
-            fontWeight: 'bold',
+            //fontWeight: 'bold',
+            fontSize:12,
           },
           predefinedPlacesDescription: {
             color: '#1faadb',
