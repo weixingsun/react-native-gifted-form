@@ -124,7 +124,7 @@ module.exports = React.createClass({
       marginTop: 2,
     },
     textInputTitleInline: {
-      width: 110,
+      width: 80,
       fontSize: 15,
       color: '#000',
       paddingLeft: 10,

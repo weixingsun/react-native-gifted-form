@@ -57,6 +57,7 @@ const defaultStyles = {
     backgroundColor: '#c8c7cc',
   },
   description: {
+    fontSize: 12,
   },
   loader: {
     // flex: 1,

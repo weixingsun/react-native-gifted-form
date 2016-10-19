@@ -353,7 +353,6 @@ module.exports = React.createClass({
     },
     alignRight: {
       alignItems: 'flex-end',
-      // width: 110,
     },
     modalValue: {
       fontSize: 15,
