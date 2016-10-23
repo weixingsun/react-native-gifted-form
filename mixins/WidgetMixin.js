@@ -57,7 +57,7 @@ module.exports = {
     // get value from store
     var formState = GiftedFormManager.stores[this.props.formName];
     if (typeof formState !== 'undefined') {
-      console.log('WidgetMixin.componentDidMount()'+this.props.name+'='+formState.values[this.props.name])
+      //console.log('WidgetMixin.componentDidMount()'+this.props.name+'='+formState.values[this.props.name])
       if (typeof formState.values[this.props.name] !== 'undefined') {
         this.setState({
           value: formState.values[this.props.name],
@@ -177,7 +177,7 @@ module.exports = {
     //if(value!=this.state.value) alert(this.props.name+'.store.value:'+value+'  state.value:'+this.state.value)
     //const hasValidationErrors = this.state.validationErrorMessage !== null && this.state.validationErrorMessage !== '';
     let errMsg = this.state.validationErrorMessage
-    if(this.state.value == null&& !this.props.validationResults[this.props.name].isValid){
+    if(this.state.value == null&& this.props.validationResults[this.props.name] && !this.props.validationResults[this.props.name].isValid){
         errMsg=this.props.validationResults[this.props.name][0].message
         //console.log('_renderValidationError() validationResults='+JSON.stringify(this.props.validationResults[this.props.name][0]) +'  value is null='+this.state.value)
     }else if (errMsg==null || errMsg==='') {

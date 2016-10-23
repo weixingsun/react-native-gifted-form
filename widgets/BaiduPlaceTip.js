@@ -120,7 +120,7 @@ const BaiduPlaceTip = React.createClass({
       enablePoweredByContainer: false, //true,
       predefinedPlaces: [],
       currentLocation: false,
-      currentLocationLabel: 'Current location',
+      currentLocationLabel: '获取当前位置',
       nearbyPlacesAPI: 'GooglePlacesSearch',
       filterReverseGeocodingByTypes: [],
       predefinedPlacesAlwaysVisible: false,

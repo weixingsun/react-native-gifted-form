@@ -122,7 +122,7 @@ const GooglePlacesAutocomplete = React.createClass({
       enablePoweredByContainer: false, //true,
       predefinedPlaces: [],
       currentLocation: false,
-      currentLocationLabel: 'Current location',
+      currentLocationLabel: 'Use current location',
       nearbyPlacesAPI: 'GooglePlacesSearch',
       filterReverseGeocodingByTypes: [],
       predefinedPlacesAlwaysVisible: false,
