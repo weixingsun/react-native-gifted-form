@@ -24,23 +24,24 @@ const defaultStyles = {
     //height: 40,
     //borderRadius: 5,
     //paddingTop: 4.5,
-    //paddingBottom: 4,
+    //paddingBottom: 1,
     //paddingLeft: 5,
     //paddingRight: 5,
     //marginTop: 2,
     //marginLeft: 2,
     //marginRight: 2,
-    //fontSize: 20,
+    //fontSize: 15,
     fontSize: 15,
     flex: 1,
-    height: 40,
+    height: 40,// @todo should be changed if underlined
+    marginTop: 2,
   },
   poweredContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   powered: {
-    marginTop: 15,
+    //marginTop: 15,
   },
   listView: {
     // flex: 1,
@@ -56,6 +57,7 @@ const defaultStyles = {
     backgroundColor: '#c8c7cc',
   },
   description: {
+    fontSize: 12,
   },
   loader: {
     // flex: 1,
@@ -120,7 +122,7 @@ const BaiduPlaceTip = React.createClass({
       enablePoweredByContainer: false, //true,
       predefinedPlaces: [],
       currentLocation: false,
-      currentLocationLabel: '获取当前位置',
+      currentLocationLabel: 'click get current location',
       nearbyPlacesAPI: 'GooglePlacesSearch',
       filterReverseGeocodingByTypes: [],
       predefinedPlacesAlwaysVisible: false,
@@ -143,7 +145,6 @@ const BaiduPlaceTip = React.createClass({
 
   buildRowsFromResults(results) {
     var res = null;
-    
     if (results.length === 0 || this.props.predefinedPlacesAlwaysVisible === true) {
       res = [...this.props.predefinedPlaces];
       if (this.props.currentLocation === true) {
@@ -155,17 +156,14 @@ const BaiduPlaceTip = React.createClass({
     } else {
       res = [];
     }
-    //if(results !==null && typeof results[0].id !== 'string'){
-    //  results[0]=null
-    //  delete results[0]
-    //}
+    
     res = res.map(function(place) {
       return {
         ...place,
         isPredefinedPlace: true,
       }
     });
-    
+    //alert('res='+JSON.stringify(res)+'\nresults='+JSON.stringify(results))
     return [...res, ...results];
   },
 
@@ -200,12 +198,14 @@ const BaiduPlaceTip = React.createClass({
     navigator.geolocation.getCurrentPosition(
       (position) => {
         //this._requestNearby(position.coords.latitude, position.coords.longitude);
+        //alert(JSON.stringify(position.coords))
       },
       (error) => {
         this._disableRowLoaders();
-        alert(error.message);
+        console.log(error.message);
+        alert('Unable to get current location, please try again or enter your location manually');
       },
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+      {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100},
     );
   },
 
@@ -235,90 +235,34 @@ const BaiduPlaceTip = React.createClass({
     }
   },
   _onPress(rowData) {
-    if (rowData.isPredefinedPlace !== true && this.props.fetchDetails === true && false) {
-      if (rowData.isLoading === true) {
-        // already requesting
-        return;
-      }
-      this._abortRequests();
-
-      // display loader
-      //this._enableRowLoader(rowData);
-      ////////////////////////////////////////////////////// fetch details
-      const request = new XMLHttpRequest();
-      this._requests.push(request);
-      request.timeout = this.props.timeout;
-      request.ontimeout = this.props.onTimeout;
-      request.onreadystatechange = () => {
-        if (request.readyState !== 4) {
-          return;
-        }
-        if (request.status === 200) {
-          const responseJSON = JSON.parse(request.responseText);
-	  //console.log('----------------------------------------------');
-	  alert(JSON.stringify(responseJSON));
-          if (responseJSON.status === 'OK') {
-            if (this.isMounted()) {
-              const details = responseJSON.result;
-              this._disableRowLoaders();
-              this._onBlur();
-
-              this.setState({
-                text: rowData.description,
-              });
-
-              delete rowData.isLoading;
-              this.props.onPress(rowData, details);
-            }
-          } else {
-            this._disableRowLoaders();
-            console.warn('google places autocomplete: ' + responseJSON.status);
-          }
-        } else {
-          this._disableRowLoaders();
-          console.warn('google places autocomplete: request could not be completed or has been aborted');
-        }
-      };
-      request.open('GET', 'https://maps.googleapis.com/maps/api/place/details/json?' + Qs.stringify({
-        key: this.props.query.key,
-        placeid: rowData.place_id,
-        //language: this.props.query.language,
-      }));
-      request.send();
+    //alert('fetchDetails='+this.props.fetchDetails+'\ndata='+JSON.stringify(rowData))
+    if (rowData.isPredefinedPlace !== true && this.props.fetchDetails === true) {
+      // fetch details
     } else if (rowData.isCurrentLocation === true) {
-      // display loader
-      //this._enableRowLoader(rowData);
-      
-      
-      this.setState({
-        text: rowData.description,
-      });
-      //this.triggerBlur(); // hide keyboard but not the results
-      this._onBlur();
-      //delete rowData.isLoading;
-
-      //this.getCurrentLocation();
-      
+      this._enableRowLoader(rowData);
+      //this.setState({
+      //  text: rowData.description,
+      //});
+      this.triggerBlur(); // hide keyboard but not the results
+      //this._onBlur();
+      this.getCurrentLocation();
+      delete rowData.isLoading;
     } else {
       //alert('>>>>>>>>>>>>>>>>>>>Yes, Baidu/Gaode use this branch<<<<<<<<<<<<<<<<<<')
-      //alert('rowData.description'+rowData.description)
       this.setState({
         text: rowData.description,
       });
-
       this._onBlur();
       delete rowData.isLoading;
-      
-      let predefinedPlace = this._getPredefinedPlace(rowData);
-      
-      // sending predefinedPlace as details for predefined places
-      this.props.onPress(predefinedPlace, predefinedPlace);
+      //let predefinedPlace = this._getPredefinedPlace(rowData);
+      this.props.onPress(rowData, null);
     }
   },
   _results: [],
   _requests: [],
   
   _getPredefinedPlace(rowData) {
+    //alert(JSON.stringify(rowData))
     if (rowData.isPredefinedPlace !== true) {
       return rowData;
     }
@@ -352,6 +296,7 @@ const BaiduPlaceTip = React.createClass({
   
   _requestNearby(latitude, longitude) {
     this._abortRequests();
+    //alert(JSON.stringify(rowData))
     if (latitude !== undefined && longitude !== undefined && latitude !== null && longitude !== null) {
       const request = new XMLHttpRequest();
       this._requests.push(request);
@@ -363,21 +308,21 @@ const BaiduPlaceTip = React.createClass({
         }
         if (request.status === 200) {
           const responseJSON = JSON.parse(request.responseText);
-          
           this._disableRowLoaders();
-          
           if (typeof responseJSON.results !== 'undefined') {
             if (this.isMounted()) {
               var results = [];
               if (this.props.nearbyPlacesAPI === 'GoogleReverseGeocoding') {
                 results = this._filterResultsByTypes(responseJSON, this.props.filterReverseGeocodingByTypes);
               } else {
-                results = responseJSON.results;
+                results = [responseJSON.results[0]];
               }
-              
+              //alert('result='+JSON.stringify(results))
               this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults(results)),
+                  dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults(results)),
+                  //text:results[0].formatted_address
               });
+              //if(this.props.onClose) this.props.onClose({lat:details.geometry.location.lat,lng:details.geometry.location.lng,type:details.types})
             }
           }
           if (typeof responseJSON.error_message !== 'undefined') {
@@ -388,22 +333,12 @@ const BaiduPlaceTip = React.createClass({
         }
       };
       
-      let url = '';
-      if (this.props.nearbyPlacesAPI === 'GoogleReverseGeocoding') {
-        // your key must be allowed to use Google Maps Geocoding API
-        url = 'https://maps.googleapis.com/maps/api/geocode/json?' + Qs.stringify({
+      let url = 'https://maps.googleapis.com/maps/api/geocode/json?' + Qs.stringify({
           latlng: latitude+','+longitude,
           key: this.props.query.key,
           ...this.props.GoogleReverseGeocodingQuery,
         });
-      } else {
-        url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?' + Qs.stringify({
-          location: latitude+','+longitude,
-          key: this.props.query.key,
-          ...this.props.GooglePlacesSearchQuery,
-        });
-      }
-      
+      //alert('url='+url)
       request.open('GET', url);
       request.send();
     } else {
@@ -429,27 +364,25 @@ const BaiduPlaceTip = React.createClass({
           return;
         }
         if (request.status === 200) {
-          const responseJSON = JSON.parse(request.responseText);
-	  //console.log('---------------in request()--------------')
-	  //alert(JSON.stringify(responseJSON))
-          if (typeof responseJSON.result !== 'undefined') {
-            if (this.isMounted()) {
-              this._results = responseJSON.result;
-              this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults(responseJSON.result)),
-              });
-            }
+          //let json = JSON.parse(request.responseText)
+          this._results = JSON.parse(request.responseText).result
+          //else if(request._response) this._results = JSON.parse(request._response).result;
+          //alert(JSON.stringify(this._results))
+          if (this._results && this.isMounted()) {
+             this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults(this._results)),
+             });
           }
-          if (typeof responseJSON.error_message !== 'undefined') {
-            console.warn('google places autocomplete: ' + responseJSON.error_message);
-          }
+          //responseJSON.error_message
         } else {
           // console.warn("google places autocomplete: request could not be completed or has been aborted");
+          //alert('err status='+request.status)
         }
       };
-      var url='http://api.map.baidu.com/place/v2/suggestion?output=json&location=40,116&mcode=' +this.props.query.mcode +'&q=' +encodeURI(text) +'&ak='+this.props.query.ak;
+      //let location_str = 'location='+this.props.query.location    //location broken on 2016-10-28
+      let location_str = '&region=全国'
+      var url='http://api.map.baidu.com/place/v2/suggestion?output=json'+location_str+'&mcode=' +this.props.query.mcode +'&q=' +encodeURI(text) +'&ak='+this.props.query.ak;
       //console.log('url='+url)
-      //alert(url)
       request.open('GET', url);
       request.send();
     } else {
@@ -529,7 +462,6 @@ const BaiduPlaceTip = React.createClass({
   },
 
   _onFocus() {
-    //alert('_onFocus')
     this.setState({listViewDisplayed: true});
   },
 
@@ -593,7 +525,6 @@ const BaiduPlaceTip = React.createClass({
 });
 
 
-// this function is still present in the library to be retrocompatible with version < 1.1.0
 const create = function create(options = {}) {
   return React.createClass({
     render() {
