@@ -1,7 +1,14 @@
 import React from 'react'
 import {TextInput, View, ListView, Image, Text, Dimensions, TouchableHighlight, TouchableWithoutFeedback, Platform, ActivityIndicator, PixelRatio} from 'react-native'
 import Qs from 'qs'
-//import Style from "./Style";
+import KKLocation from 'react-native-baidumap/KKLocation';
+
+if (!String.prototype.appendAddr) {
+    String.prototype.appendAddr = function(str){
+      if(str!=='') return this+', '+str
+      else return this
+  };
+}
 
 const defaultStyles = {
   container: {
@@ -122,8 +129,9 @@ const BaiduPlaceTip = React.createClass({
       enablePoweredByContainer: false, //true,
       predefinedPlaces: [],
       currentLocation: false,
-      currentLocationLabel: 'click get current location',
-      nearbyPlacesAPI: 'GooglePlacesSearch',
+      currentLocationLabel: '获取当前位置',
+      //nearbyPlacesAPI: 'GooglePlacesSearch',
+      nearbyPlacesAPI: 'BaiduPlacesSearch',
       filterReverseGeocodingByTypes: [],
       predefinedPlacesAlwaysVisible: false,
     };
@@ -195,17 +203,17 @@ const BaiduPlaceTip = React.createClass({
   },   
 
   getCurrentLocation() {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        //this._requestNearby(position.coords.latitude, position.coords.longitude);
-        //alert(JSON.stringify(position.coords))
-      },
-      (error) => {
-        this._disableRowLoaders();
-        console.log(error.message);
-        alert('Unable to get current location, please try again or enter your location manually');
-      },
-      {enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100},
+    let self=this
+    this.watchID = KKLocation.getCurrentPosition(
+        (position) => {
+            //{timestamp,{coords:{heading,accuracy,longitude,latitude}}}  //no speed,altitude
+            self._requestNearby(position.coords.latitude, position.coords.longitude);
+            //self.setState({ pos:position.coords })
+            //self.turnOffGps()
+            //alert(JSON.stringify(position.coords))
+        },(error) => {
+            this._disableRowLoaders();
+        },{enableHighAccuracy: false, timeout: 10000, maximumAge: 1000, distanceFilter:100},
     );
   },
 
@@ -238,11 +246,8 @@ const BaiduPlaceTip = React.createClass({
     //alert('fetchDetails='+this.props.fetchDetails+'\ndata='+JSON.stringify(rowData))
     if (rowData.isPredefinedPlace !== true && this.props.fetchDetails === true) {
       // fetch details
-    } else if (rowData.isCurrentLocation === true) {
+    } else if (rowData.isCurrentLocation === true && rowData.gotCurrentLocation !== true) {
       this._enableRowLoader(rowData);
-      //this.setState({
-      //  text: rowData.description,
-      //});
       this.triggerBlur(); // hide keyboard but not the results
       //this._onBlur();
       this.getCurrentLocation();
@@ -296,7 +301,7 @@ const BaiduPlaceTip = React.createClass({
   
   _requestNearby(latitude, longitude) {
     this._abortRequests();
-    //alert(JSON.stringify(rowData))
+    //alert('_requestNearby() '+latitude+','+ longitude)
     if (latitude !== undefined && longitude !== undefined && latitude !== null && longitude !== null) {
       const request = new XMLHttpRequest();
       this._requests.push(request);
@@ -307,23 +312,24 @@ const BaiduPlaceTip = React.createClass({
           return;
         }
         if (request.status === 200) {
+          //alert(request.responseText)
           const responseJSON = JSON.parse(request.responseText);
           this._disableRowLoaders();
-          if (typeof responseJSON.results !== 'undefined') {
-            if (this.isMounted()) {
-              var results = [];
-              if (this.props.nearbyPlacesAPI === 'GoogleReverseGeocoding') {
-                results = this._filterResultsByTypes(responseJSON, this.props.filterReverseGeocodingByTypes);
-              } else {
-                results = [responseJSON.results[0]];
-              }
+          if (responseJSON.result&&this.isMounted()) {
+              responseJSON.result['gotCurrentLocation']=true
+              responseJSON.result['isCurrentLocation']=true
+              let results = [responseJSON.result];
               //alert('result='+JSON.stringify(results))
               this.setState({
                   dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults(results)),
-                  //text:results[0].formatted_address
               });
+              /*this.setState({
+                  text: rowData.description,
+              });
+              //this._onBlur();
+              //delete rowData.isLoading;
+              this.props.onPress(rowData, null);*/
               //if(this.props.onClose) this.props.onClose({lat:details.geometry.location.lat,lng:details.geometry.location.lng,type:details.types})
-            }
           }
           if (typeof responseJSON.error_message !== 'undefined') {
             console.warn('google places autocomplete: ' + responseJSON.error_message);
@@ -332,12 +338,10 @@ const BaiduPlaceTip = React.createClass({
           // console.warn("google places autocomplete: request could not be completed or has been aborted");
         }
       };
-      
-      let url = 'https://maps.googleapis.com/maps/api/geocode/json?' + Qs.stringify({
-          latlng: latitude+','+longitude,
-          key: this.props.query.key,
-          ...this.props.GoogleReverseGeocodingQuery,
-        });
+      let url = 'http://api.map.baidu.com/geocoder/v2/?output=json'+
+                  '&mcode='+this.props.query.mcode+
+                  '&ak=' + this.props.query.ak+
+                  '&location='+latitude+','+longitude
       //alert('url='+url)
       request.open('GET', url);
       request.send();
@@ -429,10 +433,23 @@ const BaiduPlaceTip = React.createClass({
     }
     return null;
   },
-
   _renderRow(rowData = {}) {
-    rowData.description = rowData.name +', '+rowData.district+', '+ rowData.city +', 中国' ;
-    
+    //alert('got='+rowData.gotCurrentLocation+'  is='+rowData.isCurrentLocation)
+    if(typeof rowData.isCurrentLocation === 'undefined') {
+      rowData.description = rowData.name +', '+rowData.district+', '+ rowData.city //+', '+rowData.province +', '+rowData.country ;
+    }else if(typeof rowData.gotCurrentLocation !== 'undefined'){
+      //alert(JSON.stringify(rowData))
+      let near = '附近'
+      let addr = rowData.addressComponent
+      if(addr.street_number!=='')
+        rowData.description = addr.street_number.appendAddr(addr.street).appendAddr(addr.district).appendAddr(addr.city) //+', '+rowData.country ;
+      else if(addr.street!=='')
+        rowData.description = near.appendAddr(addr.street).appendAddr(addr.district).appendAddr(addr.city)
+      else if(addr.district!=='')
+        rowData.description = near.appendAddr(addr.district).appendAddr(addr.city).appendAddr(addr.country)
+      else if(addr.city!=='')
+        rowData.description = near.appendAddr(addr.city).appendAddr(addr.country)
+    }
     return (
       <TouchableHighlight
         onPress={() =>
