@@ -126,9 +126,12 @@ module.exports = React.createClass({
         autoFocus={false}
         fetchDetails={true}
         onPress={(data, details = {}) => { // details is provided when fetchDetails = true
-          this._onChange( details.formatted_address );
+          this._onChange( data.description );
+          //GiftedFormManager.updateValue(this.props.form, this.props.name, rowData.description);
+          //alert('data='+JSON.stringify(data)+'\ndetails='+JSON.stringify(details))
           this.props.onClose({lat:details.geometry.location.lat,lng:details.geometry.location.lng,type:details.types});
         }}
+        name = {this.props.name}
         value={ this.props.value }
         query={this.props.query}
         styles={{
@@ -172,6 +175,7 @@ module.exports = React.createClass({
           this._onChange( data.description )
           this.props.onClose({lat:data.location.lat,lng:data.location.lng}, this.props.navigator);
         }}
+        name = {this.props.name}
         value={ this.props.value }
         query={this.props.query}
         styles={{
@@ -191,9 +195,13 @@ module.exports = React.createClass({
   renderMaps(){
       switch(this.props.map) {
           case 'GoogleMap':
+          case 'google':
+          case 'gg':
               return this.renderGoogle()
               break;
           case 'BaiduMap':
+          case 'baidu':
+          case 'bd':
               return this.renderBaidu()
               break;
           case 'GaodeMap':
