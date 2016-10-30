@@ -170,7 +170,6 @@ module.exports = React.createClass({
         placeholder='powered by Baidu'
         minLength={2} // minimum length of text to search
         autoFocus={false}
-        //fetchDetails={true}
         onPress={(data, details = {}) => { // details is provided when fetchDetails = true
           this._onChange( data.description )
           this.props.onClose({lat:data.location.lat,lng:data.location.lng}, this.props.navigator);

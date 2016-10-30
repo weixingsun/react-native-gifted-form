@@ -243,7 +243,7 @@ const BaiduPlaceTip = React.createClass({
     }
   },
   _onPress(rowData) {
-    //alert('fetchDetails='+this.props.fetchDetails+'\ndata='+JSON.stringify(rowData))
+    //alert('isCurr='+rowData.isCurrentLocation+' gotCurr='+rowData.gotCurrentLocation+'\ndata='+JSON.stringify(rowData))
     if (rowData.isPredefinedPlace !== true && this.props.fetchDetails === true) {
       // fetch details
     } else if (rowData.isCurrentLocation === true && rowData.gotCurrentLocation !== true) {

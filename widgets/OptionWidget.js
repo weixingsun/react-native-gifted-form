@@ -40,12 +40,10 @@ module.exports = React.createClass({
       this._onChange(true);
       //alert('value='+this.props.value)
       if (typeof this.props.onSelect === 'function') {
-        //console.log('onSelect:'+this.props.value);
-        this.props.onSelect(this.props.value);
+        this.props.onSelect(this.props.title);
       }
       
       if (typeof this.props.onClose === 'function') {
-        //console.log('onClose:'+this.props.value);
         this.props.onClose(this.props.title, this.props.navigator);
       }
     } else {

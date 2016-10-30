@@ -74,7 +74,9 @@ module.exports = React.createClass({
     var route = {
       renderScene(navigator) {
         // not passing onFocus/onBlur of the current scene to the new scene
-        var {onFocus, onBlur, ...others} = _self.props;
+        //var {onFocus, onBlur, ...others} = _self.props;
+        var {onFocus, onBlur, children} = _self.props;
+        //alert('Modal.route.renderScene() children='+JSON.stringify(_self._childrenWithProps))
 
         return (
           <View style={{flex:1}}>
@@ -82,9 +84,9 @@ module.exports = React.createClass({
                   <View style={{flex:1,}}/>
                   <TouchableOpacity
                       onPress={() => {
-                        _self.requestAnimationFrame(() => {
+                        //_self.requestAnimationFrame(() => {
                           _self.onClose(null, navigator);
-                        });
+                        //});
                       }}
                   >
                     <Image
@@ -95,15 +97,18 @@ module.exports = React.createClass({
                   </TouchableOpacity>
               </View>
               <View style={{padding:10,}}>
+                  {_self._childrenWithProps}
+              </View>
+          </View>
+        );
+        /*
                   <GiftedFormModal
                       {...others}
                       navigator={navigator}
                       isModal={true}
                       children={_self._childrenWithProps}
                   />
-              </View>
-          </View>
-        );
+        */
       },
       getTitle() {
         return _self.props.title || '';
@@ -144,9 +149,9 @@ module.exports = React.createClass({
         return (
           <TouchableOpacity
             onPress={() => {
-              _self.requestAnimationFrame(() => {
+              //_self.requestAnimationFrame(() => {
                 _self.onClose(null, navigator);
-              });
+              //});
             }}
           >
             <Image
@@ -231,7 +236,6 @@ module.exports = React.createClass({
     });
   },
   _getDisplayableValue() {
-    //alert(this.props.displayValue+':'+JSON.stringify(GiftedFormManager.getValues(this.props.formName)))
     if (this.props.displayValue !== '') {
       if (typeof GiftedFormManager.stores[this.props.formName] !== 'undefined') {
         if (typeof GiftedFormManager.stores[this.props.formName].values !== 'undefined') {
@@ -293,7 +297,7 @@ module.exports = React.createClass({
     return '';
   },
   render() {
-    //console.log('modal.'+this.props.title+'.value:'+this.state.value)
+    //if(this.props.title==='Category')alert('modal.'+this.props.title+'='+this.state.value+'.display='+this.state.display)
     return (
       <TouchableHighlight
         onPress={() => {
